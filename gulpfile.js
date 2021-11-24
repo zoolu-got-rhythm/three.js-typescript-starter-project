@@ -13,7 +13,7 @@ const initBrowserSync = () => {
       baseDir: "./",
       index: "src/index.html",
     },
-    notify: true,
+    notify: false,
     injectChanges: true,
   });
 };

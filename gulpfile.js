@@ -1,22 +1,31 @@
-const { src, dest, watch, series } = require('gulp');
-var ts = require('gulp-typescript');
-const { exec } = require('child_process');
+const { src, dest, watch } = require("gulp");
+const gulpEsbuild = require("gulp-esbuild");
+const browserSync = require("browser-sync");
 
-function transpileTask() {
-    return src('src/**/*.ts')
-    .pipe(ts({
-        noImplicitAny: false,
-        module: "amd",   
-        outFile: 'output.js'
-    }))
-    .pipe(dest('build/'));
-}
-
-function bundleTask() {
-    return exec("npx webpack");
-}
-
-exports.default = function() {
-    // composed task
-    watch('src/**/*.ts', { ignoreInitial: false }, series(transpileTask, bundleTask));
+exports.default = () => {
+  initBrowserSync();
+  watch("src/**/*.ts", { ignoreInitial: false }, transpileAndBundleTask);
 };
+
+const initBrowserSync = () => {
+  browserSync.init({
+    server: {
+      baseDir: "./",
+      index: "src/index.html",
+    },
+    notify: false,
+    injectChanges: true,
+  });
+};
+
+const transpileAndBundleTask = () =>
+  src("src/**/*.ts")
+    .pipe(
+      gulpEsbuild({
+        outfile: "bundle.js",
+        bundle: true,
+        minify: false,
+      })
+    )
+    .pipe(dest("dist/"))
+    .pipe(browserSync.reload({ stream: true }));

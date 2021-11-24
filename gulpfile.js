@@ -1,10 +1,9 @@
-const { src, dest, watch, series } = require("gulp");
+const { src, dest, watch } = require("gulp");
 const gulpEsbuild = require("gulp-esbuild");
 const browserSync = require("browser-sync");
 
 exports.default = () => {
   initBrowserSync();
-
   watch("src/**/*.ts", { ignoreInitial: false }, transpileAndBundleTask);
 };
 
@@ -12,12 +11,12 @@ const initBrowserSync = () => {
   browserSync.init({
     server: {
       baseDir: "./",
-      index: "index.html",
+      index: "src/index.html",
     },
-    notify: false,
+    notify: true,
     injectChanges: true,
   });
-}
+};
 
 const transpileAndBundleTask = () =>
   src("src/**/*.ts")

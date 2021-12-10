@@ -22,10 +22,10 @@ const transpileAndBundleTask = () =>
   src("src/**/*.ts")
     .pipe(
       gulpEsbuild({
-        outfile: "bundle.js",
+        outdir: "bundle",
         bundle: true,
         minify: false,
       })
     )
-    .pipe(dest("dist/"))
+    .pipe(dest("./"))
     .pipe(browserSync.reload({ stream: true }));
